@@ -1,520 +1,551 @@
-const defaultMovies = [
-    {
-        id: 1,
-        title: "Avengers: Endgame",
-        genre: "Action",
-        language: "English",
-        price: 250,
-        poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-        trailer: "https://www.youtube.com/results?search_query=Avengers+Endgame+official+trailer"
-    },
-    {
-        id: 2,
-        title: "RRR",
-        genre: "Action",
-        language: "Telugu",
-        price: 200,
-        poster: "https://image.tmdb.org/t/p/w500/nEufeZlyAOLqO2brrs0yeF1lgXO.jpg",
-        trailer: "https://www.youtube.com/results?search_query=RRR+official+trailer"
-    },
-    {
-        id: 3,
-        title: "The Conjuring",
-        genre: "Horror",
-        language: "English",
-        price: 220,
-        poster: "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
-        trailer: "https://www.youtube.com/results?search_query=The+Conjuring+official+trailer"
-    },
-    {
-        id: 4,
-        title: "Zindagi Na Milegi Dobara",
-        genre: "Comedy",
-        language: "Hindi",
-        price: 180,
-        poster: "https://image.tmdb.org/t/p/w500/4aD0l5b7c5s9fJ9v6e0Z2x0g.jpg",
-        trailer: "https://www.youtube.com/results?search_query=Zindagi+Na+Milegi+Dobara+trailer"
-    },
-    {
-        id: 5,
-        title: "Interstellar",
-        genre: "Sci-Fi",
-        language: "English",
-        price: 250,
-        poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-        trailer: "https://www.youtube.com/results?search_query=Interstellar+official+trailer"
-    },
-    {
-        id: 6,
-        title: "Premalu",
-        genre: "Romance",
-        language: "Telugu",
-        price: 180,
-        poster: "https://image.tmdb.org/t/p/w500/2r5h7k5d8u8f8y3Q9v5x0q.jpg",
-        trailer: "https://www.youtube.com/results?search_query=Premalu+official+trailer"
-    }
+
+const poster = path => `https://image.tmdb.org/t/p/w500${path}`;
+
+const movies = [
+  {id:1,title:"The Dark Knight",genre:"Action",language:"English",rating:9.0,price:200,year:2008,poster:poster("/qJ2tW6WMUDux911r6m7haRef0WH.jpg")},
+  {id:2,title:"Interstellar",genre:"Sci-Fi",language:"English",rating:8.7,price:220,year:2014,poster:poster("/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")},
+  {id:3,title:"Spider-Man: Across the Spider-Verse",genre:"Animation",language:"English",rating:8.6,price:220,year:2023,poster:poster("/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg")},
+  {id:4,title:"Inception",genre:"Sci-Fi",language:"English",rating:8.8,price:200,year:2010,poster:poster("/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg")},
+  {id:5,title:"Avengers: Endgame",genre:"Action",language:"English",rating:8.4,price:250,year:2019,poster:poster("/or06FN3Dka5tukK1e9sl16pB3iy.jpg")},
+  {id:6,title:"Dune: Part Two",genre:"Adventure",language:"English",rating:8.5,price:250,year:2024,poster:poster("/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg")},
+  {id:7,title:"The Lion King",genre:"Adventure",language:"English",rating:8.5,price:180,year:1994,poster:poster("/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg")},
+  {id:8,title:"Joker",genre:"Drama",language:"English",rating:8.3,price:200,year:2019,poster:poster("/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg")},
+  {id:9,title:"Coco",genre:"Animation",language:"English",rating:8.4,price:180,year:2017,poster:poster("/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg")},
+  {id:10,title:"Top Gun: Maverick",genre:"Action",language:"English",rating:8.2,price:220,year:2022,poster:poster("/62HCnUTziyWcpDaBO2i1DX17ljH.jpg")},
+  {id:11,title:"RRR",genre:"Action",language:"Telugu",rating:7.8,price:220,year:2022,poster:poster("/nEufeZlyAOLqO2brrs0yeF1lgXO.jpg")},
+  {id:12,title:"Baahubali: The Beginning",genre:"Adventure",language:"Telugu",rating:8.0,price:200,year:2015,poster:poster("/9BAjt8nSSms62uOVYn1t3C3dVto.jpg")},
+  {id:13,title:"Ala Vaikunthapurramuloo",genre:"Comedy",language:"Telugu",rating:7.3,price:180,year:2020,poster:poster("/8Qy6p9pJb6s5h0u7K3n2x1v4w8L.jpg")},
+  {id:14,title:"3 Idiots",genre:"Comedy",language:"Hindi",rating:8.4,price:180,year:2009,poster:poster("/66A9MqXOyVFCssoloscw79z8Tew.jpg")},
+  {id:15,title:"Zindagi Na Milegi Dobara",genre:"Drama",language:"Hindi",rating:8.2,price:180,year:2011,poster:poster("/bqf5z8W4rW8u3Y8z8J4F6T2p1Qx.jpg")}
 ];
 
-function loadData(key, fallback) {
-    try {
-        const value = JSON.parse(localStorage.getItem(key));
-        return value ?? fallback;
-    } catch {
-        return fallback;
-    }
-}
-
-let movies = loadData("mm_movies", defaultMovies);
-let bookings = loadData("mm_bookings", []);
-let selectedMovie = null;
-let selectedSeats = [];
-let appliedCoupon = "";
-let currentDiscount = 0;
+// Food prices are sample prices for this demo website.
+const foods = [
+  {id:1,name:"Classic Popcorn",category:"Popcorn",icon:"🍿",price:120,description:"Fresh salted popcorn"},
+  {id:2,name:"Cheese Popcorn",category:"Popcorn",icon:"🍿",price:160,description:"Popcorn with cheesy flavour"},
+  {id:3,name:"Caramel Popcorn",category:"Popcorn",icon:"🍿",price:180,description:"Sweet caramel coating"},
+  {id:4,name:"Large Popcorn Tub",category:"Popcorn",icon:"🍿",price:220,description:"Extra-large sharing tub"},
+  {id:5,name:"Veg Burger",category:"Meals",icon:"🍔",price:150,description:"Vegetable patty and sauces"},
+  {id:6,name:"Cheese Burger",category:"Meals",icon:"🍔",price:190,description:"Burger with melted cheese"},
+  {id:7,name:"Chicken Burger",category:"Meals",icon:"🍔",price:220,description:"Crispy chicken burger"},
+  {id:8,name:"Margherita Pizza",category:"Meals",icon:"🍕",price:220,description:"Classic cheese pizza"},
+  {id:9,name:"Farmhouse Pizza",category:"Meals",icon:"🍕",price:280,description:"Loaded vegetable pizza"},
+  {id:10,name:"Chicken Pizza",category:"Meals",icon:"🍕",price:320,description:"Chicken and cheese pizza"},
+  {id:11,name:"French Fries",category:"Snacks",icon:"🍟",price:100,description:"Golden crispy fries"},
+  {id:12,name:"Peri Peri Fries",category:"Snacks",icon:"🍟",price:130,description:"Spicy seasoned fries"},
+  {id:13,name:"Nachos & Cheese",category:"Snacks",icon:"🧀",price:160,description:"Crunchy nachos and dip"},
+  {id:14,name:"Veg Sandwich",category:"Snacks",icon:"🥪",price:120,description:"Fresh vegetable sandwich"},
+  {id:15,name:"Chicken Sandwich",category:"Snacks",icon:"🥪",price:170,description:"Chicken filling sandwich"},
+  {id:16,name:"Veg Puff",category:"Snacks",icon:"🥐",price:50,description:"Flaky vegetable puff"},
+  {id:17,name:"Hot Dog",category:"Snacks",icon:"🌭",price:150,description:"Hot dog with sauces"},
+  {id:18,name:"Chocolate Brownie",category:"Desserts",icon:"🍫",price:120,description:"Rich chocolate brownie"},
+  {id:19,name:"Chocolate Ice Cream",category:"Desserts",icon:"🍨",price:100,description:"Chocolate-flavoured ice cream"},
+  {id:20,name:"Vanilla Ice Cream",category:"Desserts",icon:"🍦",price:80,description:"Classic vanilla scoop"},
+  {id:21,name:"Donut",category:"Desserts",icon:"🍩",price:90,description:"Sweet glazed donut"},
+  {id:22,name:"Chocolate Cake",category:"Desserts",icon:"🍰",price:140,description:"Chocolate cake slice"},
+  {id:23,name:"Cold Coffee",category:"Drinks",icon:"🥤",price:130,description:"Chilled creamy coffee"},
+  {id:24,name:"Soft Drink",category:"Drinks",icon:"🥤",price:80,description:"Chilled fizzy drink"},
+  {id:25,name:"Fresh Lemon Soda",category:"Drinks",icon:"🍋",price:90,description:"Refreshing lemon soda"},
+  {id:26,name:"Bottled Water",category:"Drinks",icon:"💧",price:40,description:"Packaged drinking water"},
+  {id:27,name:"Popcorn & Cola Combo",category:"Combos",icon:"🍿",price:180,description:"Regular popcorn and soft drink"},
+  {id:28,name:"Burger & Fries Combo",category:"Combos",icon:"🍔",price:250,description:"Burger, fries and a drink"},
+  {id:29,name:"Pizza & Cola Combo",category:"Combos",icon:"🍕",price:300,description:"Pizza slice and soft drink"},
+  {id:30,name:"Movie Night Combo",category:"Combos",icon:"🎬",price:450,description:"Large popcorn, two drinks and fries"}
+];
 
 const $ = id => document.getElementById(id);
+const money = amount => "₹" + amount.toLocaleString("en-IN");
+
+function readStorage(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+let bookings = readStorage("moviemaniaBookings", []);
+let foodCart = readStorage("moviemaniaFood", {});
+let bookedSeats = readStorage("moviemaniaBookedSeats", {});
+let appliedCoupon = "";
+let activeFoodCategory = "All";
 
 function saveData() {
-    localStorage.setItem("mm_movies", JSON.stringify(movies));
-    localStorage.setItem("mm_bookings", JSON.stringify(bookings));
+  localStorage.setItem("moviemaniaBookings", JSON.stringify(bookings));
+  localStorage.setItem("moviemaniaFood", JSON.stringify(foodCart));
+  localStorage.setItem("moviemaniaBookedSeats", JSON.stringify(bookedSeats));
+}
+
+function getMovie(id) {
+  return movies.find(movie => movie.id === Number(id));
+}
+
+function foodTotal() {
+  return foods.reduce((sum, food) =>
+    sum + food.price * (Number(foodCart[food.id]) || 0), 0);
+}
+
+function ticketTotal() {
+  const movie = getMovie($("selectedMovie").value);
+  return selectedSeats.length * (movie ? movie.price : 200);
+}
+
+let selectedSeats = [];
+
+function renderMovies() {
+  const search = $("searchMovie").value.toLowerCase().trim();
+  const genre = $("genreFilter").value;
+  const language = $("languageFilter").value;
+  const minRating = Number($("ratingFilter").value);
+  const sort = $("sortMovies").value;
+
+  let list = movies.filter(movie =>
+    movie.title.toLowerCase().includes(search) &&
+    (genre === "All" || movie.genre === genre) &&
+    (language === "All" || movie.language === language) &&
+    movie.rating >= minRating
+  );
+
+  if (sort === "rating") list.sort((a,b) => b.rating - a.rating);
+  if (sort === "ratingLow") list.sort((a,b) => a.rating - b.rating);
+  if (sort === "title") list.sort((a,b) => a.title.localeCompare(b.title));
+
+  $("movieCount").textContent = `${list.length} movies`;
+
+  $("movieGrid").innerHTML = list.length ? list.map((movie, index) => `
+    <article class="movie-card">
+      <div class="poster-wrap">
+        <img src="${movie.poster}" alt="${escapeHTML(movie.title)} poster"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='https://placehold.co/500x750/222230/ffffff?text=Movie+Poster'">
+        <span class="rating">★ ${movie.rating.toFixed(1)}/10</span>
+        ${sort === "rating" && minRating === 0 && !search &&
+          genre === "All" && language === "All"
+          ? `<span class="rank">#${index + 1}</span>` : ""}
+      </div>
+      <div class="movie-info">
+        <h3>${escapeHTML(movie.title)}</h3>
+        <p class="movie-meta">${movie.year || "2026"} · ${escapeHTML(movie.genre)}</p>
+        <p class="movie-meta">${escapeHTML(movie.language)}</p>
+        <p class="movie-price">${money(movie.price)}</p>
+        <button class="btn" onclick="chooseMovie(${movie.id})">Book Tickets</button>
+      </div>
+    </article>
+  `).join("") : `<p class="empty-state">No movies match your search.</p>`;
 }
 
 function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[char]);
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[character]);
 }
 
-function safeURL(value) {
-    try {
-        const url = new URL(value);
-        return ["https:", "http:"].includes(url.protocol) ? url.href : "";
-    } catch {
-        return "";
-    }
+function renderMovieOptions() {
+  const current = $("selectedMovie").value;
+  const sorted = [...movies].sort((a,b) => b.rating - a.rating);
+
+  $("selectedMovie").innerHTML = sorted.map(movie =>
+    `<option value="${movie.id}">${escapeHTML(movie.title)} — ★ ${movie.rating.toFixed(1)}</option>`
+  ).join("");
+
+  if (sorted.some(movie => String(movie.id) === current)) {
+    $("selectedMovie").value = current;
+  }
+
+  if (!sorted.some(movie => String(movie.id) === $("selectedMovie").value)) {
+    $("selectedMovie").value = sorted[0]?.id || "";
+  }
+
+  $("summaryMovie").textContent =
+    getMovie($("selectedMovie").value)?.title || "Choose a movie";
 }
 
-function renderMovies() {
-    const search = $("searchMovie").value.toLowerCase();
-    const genre = $("genreFilter").value;
-    const language = $("languageFilter").value;
-
-    const filtered = movies.filter(movie =>
-        movie.title.toLowerCase().includes(search) &&
-        (genre === "All" || movie.genre.toLowerCase() === genre.toLowerCase()) &&
-        (language === "All" || movie.language.toLowerCase() === language.toLowerCase())
-    );
-
-    $("movieList").innerHTML = filtered.length
-        ? filtered.map(movie => `
-            <div class="movie-card">
-                <img src="${escapeHTML(safeURL(movie.poster))}"
-                     alt="${escapeHTML(movie.title)} poster"
-                     onerror="this.onerror=null;this.src='https://placehold.co/400x600/222/fff?text=Movie+Poster'">
-                <div class="movie-info">
-                    <h3>${escapeHTML(movie.title)}</h3>
-                    <p>${escapeHTML(movie.genre)} | ${escapeHTML(movie.language)}</p>
-                    <p>Ticket Price: ₹${Number(movie.price)}</p>
-                    <button class="btn" onclick="showMovieDetails(${Number(movie.id)})">
-                        Details & Trailer
-                    </button>
-                    <button class="btn" onclick="startBooking(${Number(movie.id)})">
-                        Book Tickets
-                    </button>
-                </div>
-            </div>
-        `).join("")
-        : "<p>No movies found. Try another search.</p>";
+function chooseMovie(id) {
+  $("selectedMovie").value = String(id);
+  selectedSeats = [];
+  renderSeats();
+  updateSummary();
+  $("booking").scrollIntoView({behavior:"smooth"});
 }
 
-function showMovieDetails(id) {
-    const movie = movies.find(item => item.id === id);
-    if (!movie) return;
-
-    const trailer = safeURL(movie.trailer);
-
-    alert(
-        `Movie: ${movie.title}\n` +
-        `Genre: ${movie.genre}\n` +
-        `Language: ${movie.language}\n` +
-        `Ticket Price: ₹${movie.price}\n\n` +
-        `The trailer will open in a new tab.`
-    );
-
-    if (trailer) {
-        window.open(trailer, "_blank", "noopener,noreferrer");
-    }
-}
-
-function startBooking(id) {
-    selectedMovie = movies.find(movie => movie.id === id);
-    if (!selectedMovie) return;
-
-    selectedSeats = [];
-    appliedCoupon = "";
-    currentDiscount = 0;
-
-    $("bookingSection").classList.remove("hidden");
-    $("confirmation").classList.add("hidden");
-
-    $("selectedMovieInfo").innerHTML = `
-        <h3>${escapeHTML(selectedMovie.title)}</h3>
-        <p>${escapeHTML(selectedMovie.genre)} | ${escapeHTML(selectedMovie.language)}</p>
-    `;
-
-    $("ticketPrice").textContent = selectedMovie.price;
-    $("couponCode").value = "";
-    $("couponMessage").textContent = "";
-
-    const today = new Date();
-    const localToday = new Date(
-        today.getTime() - today.getTimezoneOffset() * 60000
-    ).toISOString().split("T")[0];
-
-    $("showDate").min = localToday;
-    $("showDate").value = localToday;
-
-    renderSeats();
-    updateSummary();
-
-    $("bookingSection").scrollIntoView({ behavior: "smooth" });
-}
-
-function getShowKey() {
-    return [
-        selectedMovie?.id,
-        $("city").value,
-        $("theatre").value,
-        $("showDate").value,
-        $("showTime").value
-    ].join("|");
-}
-
-function getBookedSeats() {
-    const showKey = getShowKey();
-    return bookings
-        .filter(booking => booking.showKey === showKey)
-        .flatMap(booking => booking.seats);
+function seatKey() {
+  return [
+    $("selectedMovie").value,
+    $("city").value,
+    $("theatre").value,
+    $("showDate").value,
+    $("showTime").value
+  ].join("|");
 }
 
 function renderSeats() {
-    if (!selectedMovie) return;
+  const key = seatKey();
+  const booked = bookedSeats[key] || [];
+  const rows = ["A","B","C","D","E","F"];
+  let html = "";
 
-    const bookedSeats = getBookedSeats();
-    const seats = [];
+  rows.forEach((row, rowIndex) => {
+    for (let number = 1; number <= 8; number++) {
+      const seat = row + number;
+      const isBooked = booked.includes(seat);
+      const isSelected = selectedSeats.includes(seat);
 
-    for (let row = 0; row < 5; row++) {
-        for (let col = 1; col <= 8; col++) {
-            const seat = String.fromCharCode(65 + row) + col;
-            const isBooked = bookedSeats.includes(seat);
-            const isSelected = selectedSeats.includes(seat);
+      // Demonstration: a few seats start booked for each show.
+      const initiallyBooked = rowIndex === 2 && [3,4].includes(number);
+      const unavailable = isBooked || initiallyBooked;
 
-            seats.push(`
-                <button type="button"
-                    class="seat ${isBooked ? "booked" : ""} ${isSelected ? "selected" : ""}"
-                    ${isBooked ? "disabled" : ""}
-                    aria-label="Seat ${seat}${isBooked ? ", booked" : ""}"
-                    onclick="toggleSeat('${seat}')">
-                    ${seat}
-                </button>
-            `);
-        }
+      html += `<button class="seat ${unavailable ? "booked" : ""} ${isSelected ? "selected" : ""}"
+        ${unavailable ? "disabled" : ""}
+        aria-label="Seat ${seat}${unavailable ? ", booked" : ""}"
+        onclick="toggleSeat('${seat}')">${seat}</button>`;
     }
+  });
 
-    $("seatLayout").innerHTML = seats.join("");
+  $("seatMap").innerHTML = html;
+  $("selectedSeatsText").textContent = selectedSeats.length
+    ? "Selected seats: " + selectedSeats.join(", ")
+    : "No seats selected";
 }
 
 function toggleSeat(seat) {
-    if (getBookedSeats().includes(seat)) return;
+  if (selectedSeats.includes(seat)) {
+    selectedSeats = selectedSeats.filter(item => item !== seat);
+  } else {
+    selectedSeats.push(seat);
+  }
 
-    if (selectedSeats.includes(seat)) {
-        selectedSeats = selectedSeats.filter(item => item !== seat);
-    } else {
-        selectedSeats.push(seat);
-    }
+  renderSeats();
+  updateSummary();
+}
 
-    renderSeats();
-    updateSummary();
+function renderFood() {
+  const list = activeFoodCategory === "All"
+    ? foods
+    : foods.filter(food => food.category === activeFoodCategory);
+
+  $("foodGrid").innerHTML = list.map(food => {
+    const quantity = Number(foodCart[food.id]) || 0;
+
+    return `
+      <article class="food-card">
+        <div class="food-icon">${food.icon}</div>
+        <h3>${escapeHTML(food.name)}</h3>
+        <p>${escapeHTML(food.description)}</p>
+        <div class="food-bottom">
+          <span class="food-price">${money(food.price)}</span>
+          <div class="quantity">
+            <button aria-label="Remove one ${escapeHTML(food.name)}"
+              onclick="changeFood(${food.id},-1)">−</button>
+            <span>${quantity}</span>
+            <button aria-label="Add one ${escapeHTML(food.name)}"
+              onclick="changeFood(${food.id},1)">+</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  document.querySelectorAll(".food-filter").forEach(button => {
+    button.classList.toggle("active",
+      button.dataset.category === activeFoodCategory);
+  });
+
+  $("foodHeaderTotal").textContent = money(foodTotal());
+}
+
+function changeFood(id, amount) {
+  const next = (Number(foodCart[id]) || 0) + amount;
+  if (next <= 0) delete foodCart[id];
+  else foodCart[id] = next;
+
+  saveData();
+  renderFood();
+  updateSummary();
+}
+
+function getDiscount(subtotal) {
+  if (appliedCoupon === "MOVIE10") return Math.round(subtotal * 0.10);
+  if (appliedCoupon === "FOOD50") return foodTotal() >= 300 ? 50 : 0;
+  if (appliedCoupon === "FIRST20") return Math.min(20, subtotal);
+  return 0;
 }
 
 function updateSummary() {
-    const subtotal = selectedSeats.length * Number(selectedMovie?.price || 0);
-    const total = Math.max(0, subtotal - currentDiscount);
+  const tickets = ticketTotal();
+  const food = foodTotal();
+  const discount = getDiscount(tickets + food);
 
-    $("selectedSeats").textContent = selectedSeats.length
-        ? selectedSeats.join(", ")
-        : "None";
-
-    $("subtotal").textContent = subtotal;
-    $("discount").textContent = currentDiscount;
-    $("totalAmount").textContent = total;
+  $("ticketSubtotal").textContent = money(tickets);
+  $("foodSubtotal").textContent = money(food);
+  $("discount").textContent = money(discount);
+  $("grandTotal").textContent = money(Math.max(0, tickets + food - discount));
+  $("summaryMovie").textContent =
+    getMovie($("selectedMovie").value)?.title || "Choose a movie";
 }
 
-function applyCoupon() {
-    const code = $("couponCode").value.trim().toUpperCase();
-    const subtotal = selectedSeats.length * Number(selectedMovie?.price || 0);
+$("applyCoupon").addEventListener("click", () => {
+  const code = $("couponCode").value.trim().toUpperCase();
 
-    if (!selectedSeats.length) {
-        $("couponMessage").textContent = "Please select seats first.";
-        return;
-    }
+  if (["MOVIE10","FOOD50","FIRST20"].includes(code)) {
+    appliedCoupon = code;
 
-    if (code === "MOVIE10") {
-        currentDiscount = Math.round(subtotal * 0.10);
-        appliedCoupon = code;
-        $("couponMessage").textContent = "10% discount applied!";
-    } else if (code === "MOVIE50") {
-        currentDiscount = Math.min(50, subtotal);
-        appliedCoupon = code;
-        $("couponMessage").textContent = "₹50 discount applied!";
+    if (code === "FOOD50" && foodTotal() < 300) {
+      $("bookingMessage").textContent =
+        "Add at least ₹300 worth of food to use FOOD50.";
     } else {
-        currentDiscount = 0;
-        appliedCoupon = "";
-        $("couponMessage").textContent = "Invalid coupon code.";
+      $("bookingMessage").textContent = `${code} applied successfully!`;
     }
+  } else {
+    appliedCoupon = "";
+    $("bookingMessage").textContent =
+      "Invalid coupon. Try MOVIE10, FOOD50 or FIRST20.";
+  }
 
-    updateSummary();
-}
+  updateSummary();
+});
 
-function confirmBooking() {
-    if (!selectedMovie) return;
+$("confirmBooking").addEventListener("click", () => {
+  const movie = getMovie($("selectedMovie").value);
+  const date = $("showDate").value;
 
-    if (!selectedSeats.length) {
-        alert("Please select at least one seat.");
-        return;
-    }
+  if (!movie) {
+    $("bookingMessage").textContent = "Please choose a movie.";
+    return;
+  }
 
-    const selectedDate = $("showDate").value;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  if (!date) {
+    $("bookingMessage").textContent = "Please select your show date.";
+    $("showDate").focus();
+    return;
+  }
 
-    if (!selectedDate || new Date(selectedDate + "T00:00:00") < today) {
-        alert("Please select today or a future date.");
-        return;
-    }
+  if (date < todayString()) {
+    $("bookingMessage").textContent = "Please select today or a future date.";
+    return;
+  }
 
-    // Recheck availability before confirming.
-    const bookedSeats = getBookedSeats();
+  if (selectedSeats.length === 0 && foodTotal() === 0) {
+    $("bookingMessage").textContent =
+      "Please select seats or add food before confirming.";
+    return;
+  }
 
-    if (selectedSeats.some(seat => bookedSeats.includes(seat))) {
-        alert("Some selected seats have just been booked. Please select again.");
-        selectedSeats = selectedSeats.filter(
-            seat => !bookedSeats.includes(seat)
-        );
-        renderSeats();
-        updateSummary();
-        return;
-    }
+  const key = seatKey();
+  const booked = bookedSeats[key] || [];
 
-    const subtotal = selectedSeats.length * Number(selectedMovie.price);
-    const discount = currentDiscount;
-    const total = Math.max(0, subtotal - discount);
-
-    const booking = {
-        id: "MM" + Date.now().toString(36).toUpperCase(),
-        movieId: selectedMovie.id,
-        movie: selectedMovie.title,
-        city: $("city").value,
-        theatre: $("theatre").value,
-        date: selectedDate,
-        time: $("showTime").value,
-        seats: [...selectedSeats],
-        subtotal,
-        discount,
-        coupon: appliedCoupon,
-        total,
-        createdAt: new Date().toISOString(),
-        status: "Confirmed"
-    };
-
-    bookings.push(booking);
-    saveData();
-
-    renderBookings();
-    renderAdminMovies();
-
-    $("ticketDetails").innerHTML = `
-        <h2>🎟️ MovieMania E-Ticket</h2>
-        <hr>
-        <p><strong>Booking ID:</strong> ${escapeHTML(booking.id)}</p>
-        <p><strong>Movie:</strong> ${escapeHTML(booking.movie)}</p>
-        <p><strong>City:</strong> ${escapeHTML(booking.city)}</p>
-        <p><strong>Theatre:</strong> ${escapeHTML(booking.theatre)}</p>
-        <p><strong>Date:</strong> ${escapeHTML(booking.date)}</p>
-        <p><strong>Showtime:</strong> ${escapeHTML(booking.time)}</p>
-        <p><strong>Seats:</strong> ${escapeHTML(booking.seats.join(", "))}</p>
-        <p><strong>Subtotal:</strong> ₹${booking.subtotal}</p>
-        <p><strong>Discount:</strong> ₹${booking.discount}</p>
-        <h3>Total Paid: ₹${booking.total}</h3>
-        <p>Status: ${escapeHTML(booking.status)}</p>
-        <hr>
-        <p>Please arrive at the theatre before the show starts.</p>
-    `;
-
-    $("confirmation").classList.remove("hidden");
-    $("confirmation").scrollIntoView({ behavior: "smooth" });
-
+  if (selectedSeats.some(seat => booked.includes(seat))) {
+    $("bookingMessage").textContent =
+      "A selected seat has already been booked. Please select again.";
     selectedSeats = [];
     renderSeats();
     updateSummary();
-}
+    return;
+  }
 
-function renderBookings() {
-    const container = $("myBookings");
+  const tickets = ticketTotal();
+  const food = foodTotal();
+  const discount = getDiscount(tickets + food);
 
-    if (!bookings.length) {
-        container.innerHTML = "<p>You have no bookings yet.</p>";
-        return;
-    }
+  const foodItems = foods
+    .filter(item => Number(foodCart[item.id]) > 0)
+    .map(item => ({
+      name:item.name,
+      quantity:Number(foodCart[item.id]),
+      price:item.price
+    }));
 
-    container.innerHTML = bookings.slice().reverse().map(booking => `
-        <div class="booking-card">
-            <h3>${escapeHTML(booking.movie)}</h3>
-            <p>Booking ID: ${escapeHTML(booking.id)}</p>
-            <p>${escapeHTML(booking.city)} | ${escapeHTML(booking.theatre)}</p>
-            <p>Date: ${escapeHTML(booking.date)} | ${escapeHTML(booking.time)}</p>
-            <p>Seats: ${escapeHTML(booking.seats.join(", "))}</p>
-            <p>Total: ₹${Number(booking.total)}</p>
-            <p>Status: ${escapeHTML(booking.status)}</p>
-            ${booking.status === "Confirmed"
-                ? `<button class="btn" onclick="cancelBooking('${escapeHTML(booking.id)}')">Cancel Booking</button>`
-                : ""}
-        </div>
-    `).join("");
+  const booking = {
+    id:"MM" + Date.now().toString().slice(-9),
+    movie:movie.title,
+    movieId:movie.id,
+    city:$("city").value,
+    theatre:$("theatre").value,
+    date,
+    time:$("showTime").value,
+    seats:[...selectedSeats],
+    food:foodItems,
+    ticketTotal:tickets,
+    foodTotal:food,
+    discount,
+    total:Math.max(0,tickets + food - discount),
+    status:"Confirmed"
+  };
+
+  bookedSeats[key] = [...booked, ...selectedSeats];
+  bookings.unshift(booking);
+
+  // Clear this order's food and coupon after successful demo booking.
+  foodCart = {};
+  appliedCoupon = "";
+  $("couponCode").value = "";
+  selectedSeats = [];
+
+  saveData();
+  renderSeats();
+  renderFood();
+  renderHistory();
+  updateSummary();
+
+  $("bookingMessage").textContent =
+    `Booking confirmed! Your booking ID is ${booking.id}.`;
+
+  $("myBookings").scrollIntoView({behavior:"smooth"});
+});
+
+function renderHistory() {
+  $("bookingHistory").innerHTML = bookings.length
+    ? bookings.map(booking => `
+      <article class="history-card">
+        <h3>🎬 ${escapeHTML(booking.movie)}</h3>
+        <p>Booking ID: ${escapeHTML(booking.id)}</p>
+        <p>${escapeHTML(booking.city)} · ${escapeHTML(booking.theatre)}</p>
+        <p>${escapeHTML(booking.date)} · ${escapeHTML(booking.time)}</p>
+        <p>Seats: ${booking.seats.length
+          ? escapeHTML(booking.seats.join(", ")) : "Food only"}</p>
+        <p>Tickets: ${money(booking.ticketTotal)}</p>
+        <p>Food: ${money(booking.foodTotal)}</p>
+        ${booking.food?.length
+          ? `<p>Items: ${booking.food.map(item =>
+              `${escapeHTML(item.name)} × ${item.quantity}`
+            ).join(", ")}</p>` : ""}
+        <p>Discount: ${money(booking.discount)}</p>
+        <p><strong>Total: ${money(booking.total)}</strong></p>
+        <p>Status: ${escapeHTML(booking.status)}</p>
+        ${booking.status !== "Cancelled"
+          ? `<button class="btn danger" onclick="cancelBooking('${booking.id}')">Cancel Booking</button>` : ""}
+      </article>
+    `).join("")
+    : `<p class="empty-state">You have no bookings yet.</p>`;
 }
 
 function cancelBooking(id) {
-    const booking = bookings.find(item => item.id === id);
+  const booking = bookings.find(item => item.id === id);
+  if (!booking || booking.status === "Cancelled") return;
 
-    if (!booking || booking.status !== "Confirmed") return;
+  if (!confirm("Do you want to cancel this demo booking?")) return;
 
-    const confirmed = confirm(
-        `Cancel booking ${booking.id} for ${booking.movie}?`
+  if (booking.seats.length) {
+    const key = [
+      booking.movieId,
+      booking.city,
+      booking.theatre,
+      booking.date,
+      booking.time
+    ].join("|");
+
+    bookedSeats[key] = (bookedSeats[key] || []).filter(
+      seat => !booking.seats.includes(seat)
     );
+  }
 
-    if (!confirmed) return;
-
-    booking.status = "Cancelled";
-    saveData();
-
-    renderBookings();
-    renderSeats();
-    renderAdminMovies();
-
-    alert("Booking cancelled. This demo does not process actual refunds.");
+  booking.status = "Cancelled";
+  saveData();
+  renderHistory();
+  renderSeats();
 }
 
-function renderAdminMovies() {
-    $("adminMovies").innerHTML = movies.map(movie => `
-        <div class="booking-card">
-            <div>
-                <h3>${escapeHTML(movie.title)}</h3>
-                <p>${escapeHTML(movie.genre)} | ${escapeHTML(movie.language)}</p>
-                <p>Ticket Price: ₹${Number(movie.price)}</p>
-            </div>
-            <button class="btn" onclick="deleteMovie(${Number(movie.id)})">
-                Delete Movie
-            </button>
-        </div>
-    `).join("");
+function renderAdmin() {
+  $("adminMovieList").innerHTML = movies.map(movie => `
+    <div class="admin-movie">
+      <div>
+        <strong>${escapeHTML(movie.title)}</strong>
+        <p>${escapeHTML(movie.genre)} · ${escapeHTML(movie.language)}
+          · ★ ${movie.rating.toFixed(1)} · ${money(movie.price)}</p>
+      </div>
+      <button class="btn danger" onclick="removeMovie(${movie.id})">Remove</button>
+    </div>
+  `).join("");
 }
 
-function deleteMovie(id) {
-    const movie = movies.find(item => item.id === id);
-    if (!movie) return;
+$("addMovieForm").addEventListener("submit", event => {
+  event.preventDefault();
 
-    if (!confirm(`Delete ${movie.title} from the movie list?`)) return;
+  const title = $("adminTitle").value.trim();
+  const genre = $("adminGenre").value.trim();
+  const language = $("adminLanguage").value;
+  const rating = Number($("adminRating").value);
+  const price = Number($("adminPrice").value);
+  const imageURL = $("adminPoster").value.trim();
 
-    movies = movies.filter(item => item.id !== id);
-    saveData();
+  if (!title || !genre || !imageURL ||
+      !Number.isFinite(rating) || rating < 0 || rating > 10 ||
+      !Number.isFinite(price) || price <= 0) {
+    $("adminMessage").textContent = "Please enter valid movie details.";
+    return;
+  }
 
-    if (selectedMovie?.id === id) {
-        selectedMovie = null;
-        selectedSeats = [];
-        $("bookingSection").classList.add("hidden");
-    }
+  movies.push({
+    id:Date.now(),
+    title,
+    genre,
+    language,
+    rating,
+    price,
+    year:new Date().getFullYear(),
+    poster:imageURL
+  });
 
-    renderMovies();
-    renderAdminMovies();
+  renderAll();
+  event.target.reset();
+  $("adminMessage").textContent = "Movie added successfully!";
+});
+
+function removeMovie(id) {
+  const index = movies.findIndex(movie => movie.id === id);
+  if (index === -1) return;
+
+  if (!confirm(`Remove "${movies[index].title}" from the movie list?`)) return;
+
+  movies.splice(index, 1);
+  renderAll();
 }
 
-$("movieForm").addEventListener("submit", event => {
-    event.preventDefault();
+function todayString() {
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0,10);
+}
 
-    const title = $("adminTitle").value.trim();
-    const genre = $("adminGenre").value.trim();
-    const language = $("adminLanguage").value.trim();
-    const price = Number($("adminPrice").value);
-    const poster = safeURL($("adminPoster").value.trim());
-    const trailer = safeURL($("adminTrailer").value.trim());
+function renderAll() {
+  renderMovies();
+  renderMovieOptions();
+  renderFood();
+  renderSeats();
+  renderHistory();
+  renderAdmin();
+  updateSummary();
+}
 
-    if (!title || !genre || !language || !poster || price <= 0) {
-        alert("Please enter valid movie details and a valid poster URL.");
-        return;
-    }
+["searchMovie","genreFilter","languageFilter","ratingFilter","sortMovies"]
+  .forEach(id => $(id).addEventListener(
+    id === "searchMovie" ? "input" : "change", renderMovies
+  ));
 
-    movies.push({
-        id: Date.now(),
-        title,
-        genre,
-        language,
-        price,
-        poster,
-        trailer
-    });
-
-    saveData();
-    renderMovies();
-    renderAdminMovies();
-
-    event.target.reset();
-    alert("Movie added successfully!");
+$("selectedMovie").addEventListener("change", () => {
+  selectedSeats = [];
+  renderSeats();
+  updateSummary();
 });
 
-$("searchMovie").addEventListener("input", renderMovies);
-$("genreFilter").addEventListener("change", renderMovies);
-$("languageFilter").addEventListener("change", renderMovies);
-
-$("city").addEventListener("change", () => {
+["city","theatre","showDate","showTime"].forEach(id => {
+  $(id).addEventListener("change", () => {
     selectedSeats = [];
     renderSeats();
     updateSummary();
+  });
 });
 
-$("theatre").addEventListener("change", () => {
-    selectedSeats = [];
-    renderSeats();
-    updateSummary();
+$("showDate").min = todayString();
+$("showDate").value = todayString();
+
+$("foodFilters").addEventListener("click", event => {
+  const button = event.target.closest("[data-category]");
+  if (!button) return;
+
+  activeFoodCategory = button.dataset.category;
+  renderFood();
 });
 
-$("showDate").addEventListener("change", () => {
-    selectedSeats = [];
-    renderSeats();
-    updateSummary();
-});
-
-$("showTime").addEventListener("change", () => {
-    selectedSeats = [];
-    renderSeats();
-    updateSummary();
-});
-
-$("applyCoupon").addEventListener("click", applyCoupon);
-$("bookTickets").addEventListener("click", confirmBooking);
-
-$("downloadTicket").addEventListener("click", () => {
-    window.print();
-});
-
-$("newBooking").addEventListener("click", () => {
-    $("confirmation").classList.add("hidden");
-    $("bookingSection").classList.add("hidden");
-    $("movies").scrollIntoView({ behavior: "smooth" });
-});
-
-renderMovies();
-renderBookings();
-renderAdminMovies();
+renderAll();

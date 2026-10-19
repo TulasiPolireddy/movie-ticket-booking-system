@@ -1,148 +1,230 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieMania | Movie Ticket Booking</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieMania | Movie Ticket Booking</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header>
-    <h1>🎬 MovieMania</h1>
+  <header class="navbar">
+    <a class="logo" href="#home">🎬 MovieMania</a>
     <nav>
-        <a href="#home">Home</a>
-        <a href="#movies">Movies</a>
-        <a href="#bookings">My Bookings</a>
-        <a href="#admin">Admin</a>
+      <a href="#home">Home</a>
+      <a href="#movies">Movies</a>
+      <a href="#booking">Book Tickets</a>
+      <a href="#food">Food & Drinks</a>
+      <a href="#myBookings">My Bookings</a>
+      <a href="#admin">Admin</a>
     </nav>
-</header>
+  </header>
 
-<section class="hero" id="home">
-    <h2>Book Your Movie Experience</h2>
-    <p>Discover movies, select your seats and enjoy the show!</p>
-    <a href="#movies" class="btn">Explore Movies</a>
-</section>
-
-<section class="filters" id="movies">
-    <h2>Now Showing</h2>
-
-    <input type="text" id="searchMovie" placeholder="Search movies...">
-
-    <select id="genreFilter">
-        <option value="All">All Genres</option>
-        <option value="Action">Action</option>
-        <option value="Comedy">Comedy</option>
-        <option value="Romance">Romance</option>
-        <option value="Sci-Fi">Sci-Fi</option>
-        <option value="Horror">Horror</option>
-    </select>
-
-    <select id="languageFilter">
-        <option value="All">All Languages</option>
-        <option value="English">English</option>
-        <option value="Telugu">Telugu</option>
-        <option value="Hindi">Hindi</option>
-        <option value="Tamil">Tamil</option>
-    </select>
-
-    <div id="movieList" class="movie-grid"></div>
-</section>
-
-<section id="bookingSection" class="section hidden">
-    <h2>Book Your Tickets</h2>
-
-    <div id="selectedMovieInfo"></div>
-
-    <label for="city">Select City</label>
-    <select id="city">
-        <option value="Hyderabad">Hyderabad</option>
-        <option value="Rajahmundry">Rajahmundry</option>
-        <option value="Vijayawada">Vijayawada</option>
-        <option value="Visakhapatnam">Visakhapatnam</option>
-    </select>
-
-    <label for="theatre">Select Theatre</label>
-    <select id="theatre">
-        <option value="PVR Cinemas">PVR Cinemas</option>
-        <option value="INOX">INOX</option>
-        <option value="AMB Cinemas">AMB Cinemas</option>
-        <option value="City Cinema">City Cinema</option>
-    </select>
-
-    <label for="showDate">Select Date</label>
-    <input type="date" id="showDate">
-
-    <label for="showTime">Select Showtime</label>
-    <select id="showTime">
-        <option value="10:00 AM">10:00 AM</option>
-        <option value="1:30 PM">1:30 PM</option>
-        <option value="6:00 PM">6:00 PM</option>
-        <option value="9:30 PM">9:30 PM</option>
-    </select>
-
-    <h3>Select Your Seats</h3>
-
-    <div class="seat-legend">
-        <span>🟩 Available</span>
-        <span>🟦 Selected</span>
-        <span>🟥 Booked</span>
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="eyebrow">YOUR CINEMA EXPERIENCE</p>
+      <h1>Lights. Camera. <span>MovieMania!</span></h1>
+      <p>Discover amazing movies, choose your favourite seats,
+        order delicious snacks and enjoy the show.</p>
+      <a class="btn" href="#movies">Explore Movies</a>
     </div>
+  </section>
 
-    <div class="screen">SCREEN THIS WAY</div>
-    <div id="seatLayout" class="seat-layout"></div>
+  <main>
+    <section class="section" id="movies">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FIND YOUR NEXT FAVOURITE</p>
+          <h2>Now Showing</h2>
+          <p>Movies arranged by rating, from highest to lowest.</p>
+        </div>
+        <span id="movieCount"></span>
+      </div>
 
-    <div class="booking-summary">
-        <p>Selected Seats: <span id="selectedSeats">None</span></p>
-        <p>Ticket Price: ₹<span id="ticketPrice">200</span></p>
-        <p>Subtotal: ₹<span id="subtotal">0</span></p>
+      <div class="filters">
+        <input id="searchMovie" type="search"
+          placeholder="Search movies...">
+        <select id="genreFilter">
+          <option value="All">All Genres</option>
+          <option>Action</option>
+          <option>Adventure</option>
+          <option>Animation</option>
+          <option>Comedy</option>
+          <option>Drama</option>
+          <option>Fantasy</option>
+          <option>Horror</option>
+          <option>Romance</option>
+          <option>Sci-Fi</option>
+        </select>
+        <select id="languageFilter">
+          <option value="All">All Languages</option>
+          <option>English</option>
+          <option>Telugu</option>
+          <option>Hindi</option>
+        </select>
+        <select id="ratingFilter">
+          <option value="0">All Ratings</option>
+          <option value="8">8.0 and above</option>
+          <option value="7">7.0 and above</option>
+          <option value="6">6.0 and above</option>
+        </select>
+        <select id="sortMovies">
+          <option value="rating">Highest Rated</option>
+          <option value="ratingLow">Lowest Rated</option>
+          <option value="title">Name A–Z</option>
+        </select>
+      </div>
 
-        <div class="coupon-row">
-            <input type="text" id="couponCode" placeholder="Enter coupon code">
-            <button id="applyCoupon" type="button">Apply</button>
+      <div class="movie-grid" id="movieGrid"></div>
+    </section>
+
+    <section class="section booking-section" id="booking">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">YOUR PERFECT MOVIE NIGHT</p>
+          <h2>Book Your Tickets</h2>
+          <p>Select a movie, showtime and your favourite seats.</p>
+        </div>
+      </div>
+
+      <div class="booking-layout">
+        <div class="panel">
+          <label for="selectedMovie">Choose Movie</label>
+          <select id="selectedMovie"></select>
+
+          <div class="form-grid">
+            <div>
+              <label for="city">City</label>
+              <select id="city">
+                <option>Hyderabad</option>
+                <option>Rajahmundry</option>
+                <option>Vijayawada</option>
+                <option>Visakhapatnam</option>
+                <option>Chennai</option>
+                <option>Bengaluru</option>
+              </select>
+            </div>
+            <div>
+              <label for="theatre">Theatre</label>
+              <select id="theatre">
+                <option value="PVR Cinemas">PVR Cinemas</option>
+                <option value="INOX">INOX</option>
+                <option value="Asian Cinemas">Asian Cinemas</option>
+                <option value="Cinepolis">Cinepolis</option>
+              </select>
+            </div>
+            <div>
+              <label for="showDate">Date</label>
+              <input id="showDate" type="date">
+            </div>
+            <div>
+              <label for="showTime">Showtime</label>
+              <select id="showTime">
+                <option>10:00 AM</option>
+                <option>1:30 PM</option>
+                <option>4:30 PM</option>
+                <option>7:30 PM</option>
+                <option>10:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="screen">SCREEN THIS WAY</div>
+          <div class="seat-legend">
+            <span>🟩 Available</span>
+            <span>🟦 Selected</span>
+            <span>🟥 Booked</span>
+          </div>
+          <div id="seatMap" class="seat-map"></div>
+          <p id="selectedSeatsText" class="muted">No seats selected</p>
+          <p class="muted">Regular seat: ₹200 each</p>
         </div>
 
-        <p id="couponMessage"></p>
-        <p>Discount: ₹<span id="discount">0</span></p>
-        <h3>Total: ₹<span id="totalAmount">0</span></h3>
+        <aside class="panel summary-panel">
+          <h3>Booking Summary</h3>
+          <div id="summaryMovie">Choose a movie</div>
+          <div class="summary-line">
+            <span>Tickets</span><strong id="ticketSubtotal">₹0</strong>
+          </div>
+          <div class="summary-line">
+            <span>Food & Drinks</span><strong id="foodSubtotal">₹0</strong>
+          </div>
+          <div class="summary-line">
+            <span>Coupon discount</span><strong id="discount">₹0</strong>
+          </div>
+          <div class="coupon-row">
+            <input id="couponCode" placeholder="Try MOVIE10">
+            <button id="applyCoupon" class="btn secondary">Apply</button>
+          </div>
+          <div class="total-line">
+            <span>Total</span><strong id="grandTotal">₹0</strong>
+          </div>
+          <button id="confirmBooking" class="btn full">Confirm Booking</button>
+          <p class="muted small">Demo website: no real payment is processed.</p>
+          <div id="bookingMessage" aria-live="polite"></div>
+        </aside>
+      </div>
+    </section>
 
-        <button id="bookTickets" class="btn">Confirm Booking</button>
-    </div>
-</section>
+    <section class="section food-section" id="food">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">SNACKS MAKE MOVIES BETTER</p>
+          <h2>Food & Drinks</h2>
+          <p>Add your favourites to your booking. Prices are per item.</p>
+        </div>
+        <div class="food-cart">🛒 Food total: <strong id="foodHeaderTotal">₹0</strong></div>
+      </div>
+      <div class="food-filters" id="foodFilters">
+        <button class="food-filter active" data-category="All">All</button>
+        <button class="food-filter" data-category="Popcorn">Popcorn</button>
+        <button class="food-filter" data-category="Meals">Burgers & Pizza</button>
+        <button class="food-filter" data-category="Snacks">Snacks</button>
+        <button class="food-filter" data-category="Drinks">Drinks</button>
+        <button class="food-filter" data-category="Desserts">Desserts</button>
+        <button class="food-filter" data-category="Combos">Combos</button>
+      </div>
+      <div class="food-grid" id="foodGrid"></div>
+    </section>
 
-<section id="confirmation" class="section hidden">
-    <h2>Booking Confirmation 🎉</h2>
-    <div id="ticketDetails" class="ticket"></div>
-    <button id="downloadTicket" class="btn">Download Ticket</button>
-    <button id="newBooking" class="btn">Book Another Movie</button>
-</section>
+    <section class="section" id="myBookings">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">YOUR CINEMA HISTORY</p>
+          <h2>My Bookings</h2>
+        </div>
+      </div>
+      <div id="bookingHistory" class="history-grid"></div>
+    </section>
 
-<section id="bookings" class="section">
-    <h2>My Bookings</h2>
-    <div id="myBookings"></div>
-</section>
+    <section class="section admin-section" id="admin">
+      <h2>Admin Dashboard</h2>
+      <p class="muted">Demo admin: add movies to the local movie list.</p>
+      <form id="addMovieForm" class="admin-form">
+        <input id="adminTitle" placeholder="Movie title" required>
+        <input id="adminGenre" placeholder="Genre" required>
+        <select id="adminLanguage">
+          <option>English</option>
+          <option>Telugu</option>
+          <option>Hindi</option>
+        </select>
+        <input id="adminRating" type="number" min="0" max="10"
+          step="0.1" placeholder="Rating / 10" required>
+        <input id="adminPrice" type="number" min="1"
+          placeholder="Ticket price" required>
+        <input id="adminPoster" type="url"
+          placeholder="Poster image URL" required>
+        <button class="btn" type="submit">Add Movie</button>
+      </form>
+      <div id="adminMessage" aria-live="polite"></div>
+      <div id="adminMovieList"></div>
+    </section>
+  </main>
 
-<section id="admin" class="section">
-    <h2>Admin Dashboard</h2>
+  <footer>
+    <p>© 2026 MovieMania | Your Movie, Your Experience 🎬</p>
+  </footer>
 
-    <form id="movieForm">
-        <input type="text" id="adminTitle" placeholder="Movie Title" required>
-        <input type="text" id="adminGenre" placeholder="Genre" required>
-        <input type="text" id="adminLanguage" placeholder="Language" required>
-        <input type="number" id="adminPrice" placeholder="Ticket Price" min="1" required>
-        <input type="url" id="adminPoster" placeholder="Poster Image URL" required>
-        <input type="url" id="adminTrailer" placeholder="YouTube Trailer URL">
-        <button type="submit" class="btn">Add Movie</button>
-    </form>
-
-    <h3>Manage Movies</h3>
-    <div id="adminMovies"></div>
-</section>
-
-<footer>
-    <p>© 2026 MovieMania | Your Movie, Your Experience</p>
-</footer>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
